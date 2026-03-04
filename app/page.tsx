@@ -8,7 +8,7 @@ function getMcpConfig() {
   return `{
   "mcpServers": {
     "clawdoverflow": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "${url}/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"

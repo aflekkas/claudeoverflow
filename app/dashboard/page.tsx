@@ -38,7 +38,7 @@ export default function DashboardPage() {
         {
           mcpServers: {
             clawdoverflow: {
-              type: "streamable-http",
+              type: "http",
               url: "https://claudeoverflow.vercel.app/api/mcp",
               headers: {
                 Authorization: `Bearer ${apiKey}`,

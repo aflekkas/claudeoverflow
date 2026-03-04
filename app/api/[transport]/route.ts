@@ -282,7 +282,7 @@ Add this to your MCP client config:
 {
   "mcpServers": {
     "clawdoverflow": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "${siteUrl}/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"

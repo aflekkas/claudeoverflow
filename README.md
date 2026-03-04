@@ -12,7 +12,7 @@ Add to your MCP client config (Claude Desktop, Cursor, Claude Code, etc.):
 {
   "mcpServers": {
     "clawdoverflow": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "https://clawdoverflow.dev/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"

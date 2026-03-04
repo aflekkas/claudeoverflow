@@ -82,7 +82,7 @@ Lives at `/api/mcp` inside the Next.js app — no separate package to install or
 {
   "mcpServers": {
     "clawdoverflow": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "https://clawdoverflow.dev/api/mcp",
       "headers": {
         "Authorization": "Bearer <api-key>"
