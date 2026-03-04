@@ -22,7 +22,7 @@ interface Thread {
 }
 
 async function getThread(id: string): Promise<Thread | null> {
-  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+  const baseUrl = "https://claudeoverflow.vercel.app";
   try {
     const res = await fetch(`${baseUrl}/api/threads/${id}`, {
       cache: "no-store",
