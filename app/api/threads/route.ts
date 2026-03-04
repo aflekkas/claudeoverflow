@@ -8,10 +8,13 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get('q')
   const tag = searchParams.get('tag')
   const sort = searchParams.get('sort') || 'recent'
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10))
+  const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)))
+  const offset = (page - 1) * limit
 
   let dbQuery = supabase
     .from('threads')
-    .select('*, answers(count)')
+    .select('*, answers(count)', { count: 'exact' })
 
   if (query) {
     dbQuery = dbQuery.textSearch('search_vector', query, { type: 'websearch' })
@@ -21,19 +24,32 @@ export async function GET(request: NextRequest) {
     dbQuery = dbQuery.contains('tags', [tag])
   }
 
-  if (sort === 'recent') {
+  if (sort === 'unsolved') {
+    dbQuery = dbQuery.eq('is_solved', false).order('created_at', { ascending: false })
+  } else {
     dbQuery = dbQuery.order('created_at', { ascending: false })
   }
 
-  dbQuery = dbQuery.limit(50)
+  dbQuery = dbQuery.range(offset, offset + limit - 1)
 
-  const { data, error } = await dbQuery
+  const { data, error, count } = await dbQuery
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ threads: data })
+  const totalPages = Math.ceil((count || 0) / limit)
+
+  return NextResponse.json({
+    threads: data,
+    pagination: {
+      page,
+      limit,
+      total: count || 0,
+      totalPages,
+      hasMore: page < totalPages,
+    },
+  })
 }
 
 export async function POST(request: Request) {

@@ -9,26 +9,36 @@ interface Thread {
   answers: { count: number }[];
 }
 
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
 async function getThreads(searchParams: {
   q?: string;
   tag?: string;
   sort?: string;
-}): Promise<Thread[]> {
+  page?: string;
+}): Promise<{ threads: Thread[]; pagination: Pagination }> {
   const params = new URLSearchParams();
   if (searchParams.q) params.set("q", searchParams.q);
   if (searchParams.tag) params.set("tag", searchParams.tag);
   if (searchParams.sort) params.set("sort", searchParams.sort);
+  if (searchParams.page) params.set("page", searchParams.page);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   try {
     const res = await fetch(`${baseUrl}/api/threads?${params.toString()}`, {
       cache: "no-store",
     });
-    if (!res.ok) return [];
+    if (!res.ok) return { threads: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0, hasMore: false } };
     const data = await res.json();
-    return data.threads ?? [];
+    return { threads: data.threads ?? [], pagination: data.pagination };
   } catch {
-    return [];
+    return { threads: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0, hasMore: false } };
   }
 }
 
@@ -48,10 +58,10 @@ function timeAgo(date: string): string {
 export default async function ThreadsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; tag?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; sort?: string; page?: string }>;
 }) {
   const params = await searchParams;
-  const threads = await getThreads(params);
+  const { threads, pagination } = await getThreads(params);
   const currentSort = params.sort || "recent";
 
   return (
@@ -130,6 +140,7 @@ export default async function ThreadsPage({
           </p>
         </div>
       ) : (
+        <>
         <div className="space-y-2">
           {threads.map((thread) => {
             const answerCount = thread.answers?.[0]?.count ?? 0;
@@ -173,6 +184,34 @@ export default async function ThreadsPage({
             );
           })}
         </div>
+
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-800/50">
+            <span className="text-xs text-zinc-500">
+              Page {pagination.page} of {pagination.totalPages} ({pagination.total} threads)
+            </span>
+            <div className="flex gap-2">
+              {pagination.page > 1 && (
+                <Link
+                  href={`/threads?page=${pagination.page - 1}&sort=${currentSort}${params.q ? `&q=${params.q}` : ""}${params.tag ? `&tag=${params.tag}` : ""}`}
+                  className="px-3 py-1.5 text-xs rounded-md border border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white transition-colors"
+                >
+                  Previous
+                </Link>
+              )}
+              {pagination.hasMore && (
+                <Link
+                  href={`/threads?page=${pagination.page + 1}&sort=${currentSort}${params.q ? `&q=${params.q}` : ""}${params.tag ? `&tag=${params.tag}` : ""}`}
+                  className="px-3 py-1.5 text-xs rounded-md border border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white transition-colors"
+                >
+                  Next
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+        </>
       )}
     </div>
   );
