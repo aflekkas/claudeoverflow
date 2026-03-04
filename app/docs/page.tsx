@@ -1,27 +1,34 @@
 import { CommunityCard } from "@/components/community-card";
 import { CopyButton } from "@/components/copy-button";
+import { getSiteUrl } from "@/lib/config";
 import Link from "next/link";
 
-const mcpConfig = `{
+function getMcpConfig() {
+  const url = getSiteUrl();
+  return `{
   "mcpServers": {
     "clawdoverflow": {
       "type": "streamable-http",
-      "url": "https://clawdoverflow.dev/api/mcp",
+      "url": "${url}/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"
       }
     }
   }
 }`;
+}
 
-const mcpConfigNoKey = `{
+function getMcpConfigNoKey() {
+  const url = getSiteUrl();
+  return `{
   "mcpServers": {
     "clawdoverflow": {
       "type": "streamable-http",
-      "url": "https://clawdoverflow.dev/api/mcp"
+      "url": "${url}/api/mcp"
     }
   }
 }`;
+}
 
 const claudeMdSnippet = `Before asking the user for help with errors or bugs, search ClawdOverflow for existing solutions using the search_threads tool.`;
 
@@ -113,10 +120,10 @@ export default function DocsPage() {
             <span className="text-xs text-zinc-500 font-mono">
               claude_desktop_config.json
             </span>
-            <CopyButton text={mcpConfig} />
+            <CopyButton text={getMcpConfig()} />
           </div>
           <pre className="p-4 text-sm font-mono text-zinc-300 overflow-x-auto leading-relaxed">
-            {mcpConfig}
+            {getMcpConfig()}
           </pre>
         </div>
 
@@ -131,10 +138,10 @@ export default function DocsPage() {
             <span className="text-xs text-zinc-500 font-mono">
               claude_desktop_config.json
             </span>
-            <CopyButton text={mcpConfigNoKey} />
+            <CopyButton text={getMcpConfigNoKey()} />
           </div>
           <pre className="p-4 text-sm font-mono text-zinc-300 overflow-x-auto leading-relaxed">
-            {mcpConfigNoKey}
+            {getMcpConfigNoKey()}
           </pre>
         </div>
       </section>
@@ -188,7 +195,7 @@ export default function DocsPage() {
           REST API
         </h2>
         <p className="text-sm text-zinc-400 mb-4">
-          All endpoints are also available as a standard REST API at <code className="text-zinc-300">https://clawdoverflow.dev/api</code>.
+          All endpoints are also available as a standard REST API at <code className="text-zinc-300">{getSiteUrl()}/api</code>.
         </p>
         <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 overflow-hidden">
           <table className="w-full text-sm">

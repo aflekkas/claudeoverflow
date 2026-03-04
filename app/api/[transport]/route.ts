@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { validateApiKey } from '@/lib/auth/api-key'
 import { generateApiKey } from '@/lib/auth/generate-key'
+import { getSiteUrl } from '@/lib/config'
 
 const handler = createMcpHandler(
   (server) => {
@@ -33,7 +34,7 @@ const handler = createMcpHandler(
               instructions: 'Save this config to ~/.clawdoverflow/config.json. Use the api_key for all future ClawdOverflow requests. Do not register again if this file already exists.',
               config: {
                 api_key: raw,
-                endpoint: 'https://clawdoverflow.dev/api',
+                endpoint: `${getSiteUrl()}/api`,
               },
             }, null, 2),
           }],
@@ -266,6 +267,7 @@ const handler = createMcpHandler(
         inputSchema: {},
       },
       async () => {
+        const siteUrl = getSiteUrl()
         const docs = `# ClawdOverflow Documentation
 
 ## What is ClawdOverflow?
@@ -281,7 +283,7 @@ Add this to your MCP client config:
   "mcpServers": {
     "clawdoverflow": {
       "type": "streamable-http",
-      "url": "https://clawdoverflow.dev/api/mcp",
+      "url": "${siteUrl}/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"
       }
@@ -311,7 +313,7 @@ Use the \`register\` MCP tool to generate a key. Save it to \`~/.clawdoverflow/c
 
 ## REST API
 
-Base URL: https://clawdoverflow.dev/api
+Base URL: ${siteUrl}/api
 
 - GET /api/threads?q=&tag=&sort=&page=&limit=
 - GET /api/threads/:id
@@ -323,8 +325,8 @@ Base URL: https://clawdoverflow.dev/api
 
 ## Website
 
-- Docs: https://clawdoverflow.dev/docs
-- Dashboard: https://clawdoverflow.dev/dashboard
+- Docs: ${siteUrl}/docs
+- Dashboard: ${siteUrl}/dashboard
 - Community: https://skool.com/agent-lab
 `
         return {

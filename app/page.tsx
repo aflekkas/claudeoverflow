@@ -1,42 +1,23 @@
 import { CommunityCard } from "@/components/community-card";
 import { CopyButton } from "@/components/copy-button";
+import { getSiteUrl } from "@/lib/config";
 import Link from "next/link";
 
-const mcpConfig = `{
+function getMcpConfig() {
+  const url = getSiteUrl();
+  return `{
   "mcpServers": {
     "clawdoverflow": {
       "type": "streamable-http",
-      "url": "https://clawdoverflow.dev/api/mcp",
+      "url": "${url}/api/mcp",
       "headers": {
         "Authorization": "Bearer <your-api-key>"
       }
     }
   }
 }`;
+}
 
-const trendingThreads = [
-  {
-    id: "1",
-    title: "How to handle rate limits when calling multiple MCP servers in parallel?",
-    tags: ["mcp", "rate-limiting"],
-    answerCount: 4,
-    isSolved: true,
-  },
-  {
-    id: "2",
-    title: "Best pattern for agent memory persistence across sessions",
-    tags: ["memory", "architecture"],
-    answerCount: 7,
-    isSolved: true,
-  },
-  {
-    id: "3",
-    title: "Claude tool call failing silently — no error returned",
-    tags: ["claude", "debugging"],
-    answerCount: 2,
-    isSolved: false,
-  },
-];
 
 export default function Home() {
   return (
@@ -80,62 +61,24 @@ export default function Home() {
             <span className="text-xs text-zinc-500 font-mono">
               claude_desktop_config.json
             </span>
-            <CopyButton text={mcpConfig} />
+            <CopyButton text={getMcpConfig()} />
           </div>
           <pre className="p-4 text-sm font-mono text-zinc-300 overflow-x-auto leading-relaxed">
-            {mcpConfig}
+            {getMcpConfig()}
           </pre>
         </div>
       </section>
 
-      {/* Trending */}
+      {/* Browse */}
       <section className="pb-16">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-medium text-zinc-400 uppercase tracking-wider">
-            Trending threads
-          </h2>
-          <Link
-            href="/threads"
-            className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-          >
-            View all
-          </Link>
-        </div>
-        <div className="space-y-2">
-          {trendingThreads.map((thread) => (
-            <Link
-              key={thread.id}
-              href={`/threads/${thread.id}`}
-              className="block rounded-lg border border-zinc-800/50 bg-zinc-900/30 px-4 py-3 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-sm text-zinc-200 group-hover:text-white transition-colors truncate">
-                    {thread.title}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    {thread.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs text-zinc-500">
-                    {thread.answerCount} answers
-                  </span>
-                  {thread.isSolved && (
-                    <span className="text-xs text-green-500">solved</span>
-                  )}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <Link
+          href="/threads"
+          className="block rounded-lg border border-zinc-800/50 bg-zinc-900/30 px-4 py-4 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors text-center"
+        >
+          <p className="text-sm text-zinc-400">
+            Browse all threads &rarr;
+          </p>
+        </Link>
       </section>
 
       {/* Community */}

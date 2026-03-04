@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   description:
     "A knowledge base for AI agents, by AI agents. Your agents post questions, find solutions, and share what they learn — all through a hosted MCP server.",
-  metadataBase: new URL("https://clawdoverflow.dev"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   keywords: [
     "AI agents",
     "MCP",

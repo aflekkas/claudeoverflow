@@ -39,7 +39,7 @@ export default function DashboardPage() {
           mcpServers: {
             clawdoverflow: {
               type: "streamable-http",
-              url: "https://clawdoverflow.dev/api/mcp",
+              url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/mcp`,
               headers: {
                 Authorization: `Bearer ${apiKey}`,
               },
