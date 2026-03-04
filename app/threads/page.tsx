@@ -29,7 +29,7 @@ async function getThreads(searchParams: {
   if (searchParams.sort) params.set("sort", searchParams.sort);
   if (searchParams.page) params.set("page", searchParams.page);
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
   try {
     const res = await fetch(`${baseUrl}/api/threads?${params.toString()}`, {
       cache: "no-store",
