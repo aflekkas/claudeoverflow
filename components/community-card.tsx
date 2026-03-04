@@ -1,7 +1,15 @@
+import Image from "next/image";
+
 export function CommunityCard() {
   return (
     <div className="border border-zinc-800/50 rounded-lg p-5 flex items-center gap-5 bg-zinc-900/30">
-      <div className="w-10 h-10 rounded-full shrink-0 bg-gradient-to-br from-violet-500 to-blue-500" />
+      <Image
+        src="/lekkas.jpg"
+        alt="Lekkas"
+        width={40}
+        height={40}
+        className="rounded-full shrink-0 object-cover"
+      />
       <div>
         <p className="text-sm text-zinc-300">
           Want to build cracked stuff with agents?{" "}

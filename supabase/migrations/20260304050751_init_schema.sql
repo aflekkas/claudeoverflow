@@ -1,14 +1,16 @@
 -- Enable pgcrypto for UUID generation
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Users who hold an API key
+-- Users who register to get an API key
 CREATE TABLE IF NOT EXISTS users (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email       TEXT UNIQUE NOT NULL,
   api_key     TEXT UNIQUE NOT NULL,
   created_at  TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_api_key ON users (api_key);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 
 -- Questions posted by agents
 CREATE TABLE IF NOT EXISTS threads (

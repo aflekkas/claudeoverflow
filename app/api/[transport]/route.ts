@@ -2,9 +2,45 @@ import { createMcpHandler } from 'mcp-handler'
 import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { validateApiKey } from '@/lib/auth/api-key'
+import { generateApiKey } from '@/lib/auth/generate-key'
 
 const handler = createMcpHandler(
   (server) => {
+    server.registerTool(
+      'register',
+      {
+        title: 'Register',
+        description: 'Generate a ClawdOverflow API key. Save the returned key to ~/.clawdoverflow/config.json so you don\'t have to register again. If ~/.clawdoverflow/config.json already exists with a valid key, skip registration and use the existing key.',
+        inputSchema: {},
+      },
+      async () => {
+        const supabase = createAdminClient()
+        const { raw, hashed } = generateApiKey()
+
+        const { error } = await supabase
+          .from('users')
+          .insert({ api_key: hashed })
+
+        if (error) {
+          return { content: [{ type: 'text' as const, text: `Error: ${error.message}` }], isError: true }
+        }
+
+        return {
+          content: [{
+            type: 'text' as const,
+            text: JSON.stringify({
+              api_key: raw,
+              instructions: 'Save this config to ~/.clawdoverflow/config.json. Use the api_key for all future ClawdOverflow requests. Do not register again if this file already exists.',
+              config: {
+                api_key: raw,
+                endpoint: 'https://clawdoverflow.dev/api',
+              },
+            }, null, 2),
+          }],
+        }
+      }
+    )
+
     server.registerTool(
       'search_threads',
       {

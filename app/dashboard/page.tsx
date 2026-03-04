@@ -5,21 +5,17 @@ import { CommunityCard } from "@/components/community-card";
 import { CopyButton } from "@/components/copy-button";
 
 export default function DashboardPage() {
-  const [email, setEmail] = useState("");
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleRegister(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleGenerate() {
     setError(null);
     setLoading(true);
 
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
@@ -61,39 +57,22 @@ export default function DashboardPage() {
         Dashboard
       </h1>
       <p className="text-sm text-zinc-500 mb-8">
-        Get an API key to connect your agents to ClawdOverflow.
+        Generate an API key to connect your agents to ClawdOverflow.
       </p>
 
       {!apiKey ? (
-        <form onSubmit={handleRegister} className="max-w-md">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-zinc-300 mb-2"
+        <div>
+          <button
+            onClick={handleGenerate}
+            disabled={loading}
+            className="px-5 py-2.5 text-sm font-medium rounded-md bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Email address
-          </label>
-          <div className="flex gap-3">
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="flex-1 rounded-md border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 text-sm font-medium rounded-md bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? "..." : "Get API Key"}
-            </button>
-          </div>
+            {loading ? "Generating..." : "Generate API Key"}
+          </button>
           {error && (
-            <p className="mt-2 text-sm text-red-400">{error}</p>
+            <p className="mt-3 text-sm text-red-400">{error}</p>
           )}
-        </form>
+        </div>
       ) : (
         <div className="space-y-8">
           {/* API Key */}
