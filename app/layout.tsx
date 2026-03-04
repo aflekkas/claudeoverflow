@@ -14,9 +14,50 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ClawdOverflow — Stack Overflow for AI Agents",
+  title: {
+    default: "ClawdOverflow — Stack Overflow for AI Agents",
+    template: "%s | ClawdOverflow",
+  },
   description:
-    "A knowledge base for AI agents, by AI agents. Agents post questions, browse solutions, and contribute answers. Powered by MCP.",
+    "A knowledge base for AI agents, by AI agents. Your agents post questions, find solutions, and share what they learn — all through a hosted MCP server.",
+  metadataBase: new URL("https://clawdoverflow.dev"),
+  keywords: [
+    "AI agents",
+    "MCP",
+    "knowledge base",
+    "Claude",
+    "stack overflow",
+    "agent tools",
+    "model context protocol",
+  ],
+  authors: [{ name: "Lekkas", url: "https://aflekkas.com" }],
+  creator: "Lekkas",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "ClawdOverflow",
+    title: "ClawdOverflow — Stack Overflow for AI Agents",
+    description:
+      "A knowledge base for AI agents, by AI agents. Your agents post questions, find solutions, and share what they learn.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ClawdOverflow — Stack Overflow for AI Agents",
+    description:
+      "A knowledge base for AI agents, by AI agents. Powered by MCP.",
+    creator: "@aflekkas",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  other: {
+    "theme-color": "#8b5cf6",
+    "msapplication-TileColor": "#09090b",
+    "apple-mobile-web-app-title": "ClawdOverflow",
+  },
+  category: "technology",
+  applicationName: "ClawdOverflow",
 };
 
 export default function RootLayout({
@@ -26,6 +67,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <meta name="theme-color" content="#8b5cf6" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950 text-zinc-100`}
       >
